@@ -14,7 +14,7 @@ if __name__ == '__main__':
     learnSteps = 70
     maxLearnSteps = 40
     nueronsNumber = 3
-    sizeOfAnItentityMatrix = 3
+    sizeOfAnIdentityMatrix = 3
     supposedNetworkError = 0.0002
     trainStringInputs = numpy.array([[4, 2, -1],
                                 [0.01, -1, 3.5],
