@@ -36,7 +36,9 @@ if __name__ == '__main__':
                    showindex = ['Mammal', 'Bird', 'Fish'],\
                    headers = ['First Example', 'Second Example', 'Third Example']))
 
-    figure, meanSquaredErrorChart = matplotlib.pyplot.subplots(1, 1)
+    figureColumns = 1
+    figureRows = 1
+    figure, meanSquaredErrorChart = matplotlib.pyplot.subplots(figureRows, figureColumns)
     meanSquaredErrorChart.set_title("Total mean squared error")
     meanSquaredErrorChart.set_xlabel('Learning Step')
     meanSquaredErrorChart.set_ylabel('Error Value')

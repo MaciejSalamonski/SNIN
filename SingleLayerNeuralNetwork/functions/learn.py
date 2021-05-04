@@ -11,6 +11,8 @@ def learn(networkWeightsMatrixBeforeLearn,\
     dataPlot = {}
     learnFactor = 0.1
     sizeOfEachElementInsideArray = 1
+    oneHalfMSEDivider = 2
+    square = 2
 
     examplesNumber = trainStringInputs.shape[sizeOfEachElementInsideArray]
     networkWeightsMatrix = networkWeightsMatrixBeforeLearn
@@ -23,7 +25,7 @@ def learn(networkWeightsMatrixBeforeLearn,\
         resultError = trainStringOutputs[:, drawExample] - result
         resultMultipliedByDerivativeOfActivationFunction = resultError * beta * result * (1 - result)
 
-        meanSquaredError = numpy.sum(resultError ** 2 / 2)
+        meanSquaredError = numpy.sum(resultError ** square / oneHalfMSEDivider)
         dataPlot[learnStep] = meanSquaredError
 
         if meanSquaredError <= supposedNetworkError and learnStep >= 10:
