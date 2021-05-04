@@ -10,6 +10,7 @@ def learn(networkWeightsMatrixBeforeLearn,\
     beta = 5
     dataPlot = {}
     learnFactor = 0.1
+    minimumLearnSteps = 10
     sizeOfEachElementInsideArray = 1
     oneHalfMSEDivider = 2
     square = 2
@@ -28,7 +29,7 @@ def learn(networkWeightsMatrixBeforeLearn,\
         meanSquaredError = numpy.sum(resultError ** square / oneHalfMSEDivider)
         dataPlot[learnStep] = meanSquaredError
 
-        if meanSquaredError <= supposedNetworkError and learnStep >= 10:
+        if meanSquaredError <= supposedNetworkError and learnStep >= minimumLearnSteps:
             break
         elif learnStep >= maxLearnSteps:
             break

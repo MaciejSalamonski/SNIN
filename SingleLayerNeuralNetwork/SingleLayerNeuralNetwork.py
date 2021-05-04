@@ -14,13 +14,14 @@ if __name__ == '__main__':
     learnSteps = 70
     maxLearnSteps = 40
     nueronsNumber = 3
+    sizeOfAnItentityMatrix = 3
     supposedNetworkError = 0.0002
     trainStringInputs = numpy.array([[4, 2, -1],
                                 [0.01, -1, 3.5],
                                 [0.01, 2, 0.01],
                                 [-1, 2.5, -2],
                                 [-1.5, 2, 1.5]])
-    trainStringOutputs = numpy.eye(3)
+    trainStringOutputs = numpy.eye(sizeOfAnItentityMatrix)
 
     networkWeightsMatrixBeforeLearn = createNetworkWithRandomWeights(inputsNumber, nueronsNumber)
     networkWeightsMatrixAfterLearn, dataPlot = learn(networkWeightsMatrixBeforeLearn,\
