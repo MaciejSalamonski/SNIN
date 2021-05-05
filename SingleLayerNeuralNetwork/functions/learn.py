@@ -1,5 +1,5 @@
 import numpy
-from simulateNeuralNetwork import *
+from simulateNeuralNetwork import simulateNeuralNetwork
 
 def learn(networkWeightsMatrixBeforeLearn,\
           trainStringInputs,\
