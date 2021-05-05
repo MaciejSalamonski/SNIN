@@ -5,11 +5,11 @@ def simulateNeuralNetwork(firstLayerNetworkWeightsMatrix, secondLayerNetworkWeig
     constantValue = 1
 
     firstLayerInputVector = numpy.vstack((-1, inputsVector))
-    U1 = firstLayerNetworkWeightsMatrix.T.dot(firstLayerInputVector)
-    firstLayerOutputsVector = (constantValue / (constantValue + numpy.exp(- beta * U1)))
+    firstLayerWeightedSum = firstLayerNetworkWeightsMatrix.T.dot(firstLayerInputVector)
+    firstLayerOutputsVector = (constantValue / (constantValue + numpy.exp(- beta * firstLayerWeightedSum)))
 
     secondLayerInputVector = numpy.vstack((-1, firstLayerOutputsVector))
-    U2 = secondLayerNetworkWeightsMatrix.T.dot(secondLayerInputVector)
-    secondLayerOutputsVector = (constantValue / (constantValue + numpy.exp(- beta * U2)))
+    secondLayerWeightedSum = secondLayerNetworkWeightsMatrix.T.dot(secondLayerInputVector)
+    secondLayerOutputsVector = (constantValue / (constantValue + numpy.exp(- beta * secondLayerWeightedSum)))
 
     return firstLayerOutputsVector, secondLayerOutputsVector

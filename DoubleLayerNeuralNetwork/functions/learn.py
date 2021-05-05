@@ -1,81 +1,109 @@
 import numpy 
-from simulateNeuralNetwork import *
+from simulateNeuralNetwork import simulateNeuralNetwork
 
-def learn(W1przed, W2przed, P, T, n, m, e, k):
-    liczbaPrzykladow = P.shape[1]
+def learn(firstLayerNetworkWeightsMatrixBeforeLearn, \
+          secondLayerNetworkWeightsMatrixBeforeLearn, \
+          trainStringInputs, \
+          trainStringOutputs, \
+          learnSteps, \
+          maxLearnSteps, 
+          supposedNetworkError, \
+          numberOfShownExamplesPerStep):
 
-    W1 = W1przed
-    W2 = W2przed
-
-    S2 = W2.shape[0]
-
-    wspMomentum = 0.7
-    wspUcz = 0.1
-    blad2poprzedni = 0
-    dW1 = 0
-    dW2 = 0
     beta = 5
-    plot_data2 = {}
-    plot_data1 = {}
+    firstLayerDataPlot = {}
+    firstLayerMeanSquaredError = 0
+    firstLayerWeightsAfterCorrection = 0
+    learnFactor = 0.1
+    momentumFactor = 0.7
+    oneHalfMSEDivider = 2
+    secondLayerDataPlot = {}
+    secondLayerMeanSquaredError = 0
+    secondLayerWeightsAfterCorrection = 0
+    sizeOfEachElementInsideArray = 1
+    square = 2
+
+    blad2poprzedni = 0
     dW1pokaz = 0
     dW2pokaz = 0
-    blad1pokaz = 0
-    blad2pokaz = 0
 
-    for krok_uczenia in range(1, n + 1):
-        for krok_pokazu in range(k):
-            nrPrzykladu = numpy.random.randint(liczbaPrzykladow, size=1)
+    firstLayerNetworkWeightsMatrix = firstLayerNetworkWeightsMatrixBeforeLearn
+    secondLayerNetworkWeightsMatrix = secondLayerNetworkWeightsMatrixBeforeLearn
 
-            X = P[:, nrPrzykladu]
-            X1 = numpy.vstack((-1, X))
-            Y1, Y2 = simulateNeuralNetwork(W1, W2, X)
+    S2 = secondLayerNetworkWeightsMatrix.shape[0]
 
-            X2 = numpy.vstack((-1, Y1))
+    examplesNumber = trainStringInputs.shape[sizeOfEachElementInsideArray]
 
-            D2 = T[:, nrPrzykladu] - Y2
-            E2 = beta * D2  * Y2 * (1 - Y2)
+    for learnStep in range(1, learnSteps + 1):
+        for krok_pokazu in range(numberOfShownExamplesPerStep):
+            drawExample = numpy.random.randint(examplesNumber, size = 1)
+            inputExample = trainStringInputs[:, drawExample]
+            
+            firstLayerResult, secondLayerResult = simulateNeuralNetwork(firstLayerNetworkWeightsMatrix, \
+                                                                        secondLayerNetworkWeightsMatrix, \
+                                                                        inputExample)
 
-            D1 = W2[1:S2, :] * E2
-            E1 = beta * D1  * Y1 * (1 - Y1)
+            secondLayerResultError = trainStringOutputs[:, drawExample] - secondLayerResult
+            secondLayerResultMultipliedByDerivativeOfActivationFunction = beta \
+                                                                          * secondLayerResultError \
+                                                                          * secondLayerResult \
+                                                                          * (1 - secondLayerResult)
 
-            blad1pokaz += numpy.sum(D1 ** 2 / 2)
-            blad2pokaz += numpy.sum(D2 ** 2 / 2)
+            firstLayerResultError = secondLayerNetworkWeightsMatrix[1:S2, :] * secondLayerResultMultipliedByDerivativeOfActivationFunction
+            firstLayerResultMultipliedByDerivativeOfActivationFunction = beta \
+                                                                         * firstLayerResultError \
+                                                                         * firstLayerResult \
+                                                                         * (1 - firstLayerResult)
 
-            dW1 = wspUcz * X1 * E1.T + wspMomentum * dW1
-            dW2 = wspUcz * X2 * E2.T + wspMomentum * dW2
+            firstLayerMeanSquaredError += numpy.sum(firstLayerResultError ** square / oneHalfMSEDivider)
+            secondLayerMeanSquaredError += numpy.sum(secondLayerResultError ** square / oneHalfMSEDivider)
 
-            dW1pokaz += dW1 
-            dW2pokaz += dW2
+            X1 = numpy.vstack((-1, inputExample))
+            firstLayerWeightsAfterCorrection = learnFactor \
+                                               * X1 \
+                                               * firstLayerResultMultipliedByDerivativeOfActivationFunction.T \
+                                               + (momentumFactor * firstLayerWeightsAfterCorrection)
+            X2 = numpy.vstack((-1, firstLayerResult))
+            secondLayerWeightsAfterCorrection = learnFactor \
+                                                * X2 \
+                                                * secondLayerResultMultipliedByDerivativeOfActivationFunction.T \
+                                                + (momentumFactor * secondLayerWeightsAfterCorrection)
 
-        W1 += dW1pokaz / k
-        W2 += dW2pokaz / k
+            dW1pokaz += firstLayerWeightsAfterCorrection 
+            dW2pokaz += secondLayerWeightsAfterCorrection
+
+        firstLayerNetworkWeightsMatrix += dW1pokaz / numberOfShownExamplesPerStep
+        secondLayerNetworkWeightsMatrix += dW2pokaz / numberOfShownExamplesPerStep
 
         dW1pokaz = 0
         dW2pokaz = 0
 
-        blad1 = blad1pokaz / k
-        blad2 = blad2pokaz / k
-        plot_data2[krok_uczenia] = blad2
-        plot_data1[krok_uczenia] = blad1
+        blad1 = firstLayerMeanSquaredError / numberOfShownExamplesPerStep
+        blad2 = secondLayerMeanSquaredError / numberOfShownExamplesPerStep
+        secondLayerDataPlot[learnStep] = blad2
+        firstLayerDataPlot[learnStep] = blad1
 
-        blad1pokaz = 0
-        blad2pokaz = 0
+        firstLayerMeanSquaredError = 0
+        secondLayerMeanSquaredError = 0
 
-        if krok_uczenia >= m:
+        if learnStep >= maxLearnSteps:
             break
-        elif blad2 <= e:
+        elif blad2 <= supposedNetworkError:
             try:
-                if any(list(plot_data2.values())[krok_uczenia - b] / e >= 10 for b in range(2, 42)):
+                if any(list(secondLayerDataPlot.values())[learnStep - b] / supposedNetworkError >= 10 for b in range(2, 42)):
                     pass
                 else:
                     break
             except IndexError:
                 pass
 
-        if blad2 > 1.04 * blad2poprzedni and 0.7 * wspUcz >= 0.15:
-            wspUcz = 0.7 * wspUcz
+        if blad2 > 1.04 * blad2poprzedni and 0.7 * learnFactor >= 0.15:
+            learnFactor = 0.7 * learnFactor
         else:
-            wspUcz = 1.05 * wspUcz
+            learnFactor = 1.05 * learnFactor
         blad2poprzedni = blad2
 
-    return W1, W2, plot_data1, plot_data2
+    return firstLayerNetworkWeightsMatrix, \
+           secondLayerNetworkWeightsMatrix, \
+           firstLayerDataPlot, \
+           secondLayerDataPlot

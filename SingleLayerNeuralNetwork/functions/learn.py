@@ -35,6 +35,6 @@ def learn(networkWeightsMatrixBeforeLearn,\
             break
 
         weightsAfterCorrection = learnFactor * inputExample * resultMultipliedByDerivativeOfActivationFunction.T
-        networkWeightsMatrix = networkWeightsMatrix + weightsAfterCorrection
+        networkWeightsMatrix +=  weightsAfterCorrection
 
     return networkWeightsMatrix, dataPlot
