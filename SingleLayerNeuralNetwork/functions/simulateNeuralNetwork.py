@@ -4,6 +4,7 @@ def simulateNeuralNetwork(networkWeightsMatrix, inputsVector):
     beta = 5
     constantValue = 1
 
-    outputsVector = networkWeightsMatrix.T.dot(inputsVector)
+    weightedSum = networkWeightsMatrix.T.dot(inputsVector)
+    outputsVector = (constantValue / (constantValue + numpy.exp(- beta * weightedSum)))
     
-    return (constantValue / (constantValue + numpy.exp(- beta * outputsVector)))
+    return outputsVector
