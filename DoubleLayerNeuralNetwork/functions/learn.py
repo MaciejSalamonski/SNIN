@@ -17,25 +17,23 @@ def learn(firstLayerNetworkWeightsMatrixBeforeLearn, \
     learnFactor = 0.1
     momentumFactor = 0.7
     oneHalfMSEDivider = 2
+    previousSecondLayerAveragedMeanSquaredError = 0
     secondLayerDataPlot = {}
     secondLayerMeanSquaredError = 0
     secondLayerWeightsAfterCorrection = 0
+    showFirstLayerWeightsAfterCorrection = 0
+    showSecondLayerWeightsAfterCorrection = 0
     sizeOfEachElementInsideArray = 1
     square = 2
-
-    blad2poprzedni = 0
-    dW1pokaz = 0
-    dW2pokaz = 0
 
     firstLayerNetworkWeightsMatrix = firstLayerNetworkWeightsMatrixBeforeLearn
     secondLayerNetworkWeightsMatrix = secondLayerNetworkWeightsMatrixBeforeLearn
 
-    S2 = secondLayerNetworkWeightsMatrix.shape[0]
-
+    secondLayerInputsNumber = secondLayerNetworkWeightsMatrix.shape[0]
     examplesNumber = trainStringInputs.shape[sizeOfEachElementInsideArray]
 
     for learnStep in range(1, learnSteps + 1):
-        for krok_pokazu in range(numberOfShownExamplesPerStep):
+        for showStep in range(numberOfShownExamplesPerStep):
             drawExample = numpy.random.randint(examplesNumber, size = 1)
             inputExample = trainStringInputs[:, drawExample]
             
@@ -49,7 +47,8 @@ def learn(firstLayerNetworkWeightsMatrixBeforeLearn, \
                                                                           * secondLayerResult \
                                                                           * (1 - secondLayerResult)
 
-            firstLayerResultError = secondLayerNetworkWeightsMatrix[1:S2, :] * secondLayerResultMultipliedByDerivativeOfActivationFunction
+            firstLayerResultError = secondLayerNetworkWeightsMatrix[1:secondLayerInputsNumber, :] \
+                                    * secondLayerResultMultipliedByDerivativeOfActivationFunction
             firstLayerResultMultipliedByDerivativeOfActivationFunction = beta \
                                                                          * firstLayerResultError \
                                                                          * firstLayerResult \
@@ -58,37 +57,38 @@ def learn(firstLayerNetworkWeightsMatrixBeforeLearn, \
             firstLayerMeanSquaredError += numpy.sum(firstLayerResultError ** square / oneHalfMSEDivider)
             secondLayerMeanSquaredError += numpy.sum(secondLayerResultError ** square / oneHalfMSEDivider)
 
-            X1 = numpy.vstack((-1, inputExample))
+            firstLayerInput = numpy.vstack((-1, inputExample))
             firstLayerWeightsAfterCorrection = learnFactor \
-                                               * X1 \
+                                               * firstLayerInput \
                                                * firstLayerResultMultipliedByDerivativeOfActivationFunction.T \
                                                + (momentumFactor * firstLayerWeightsAfterCorrection)
-            X2 = numpy.vstack((-1, firstLayerResult))
+            secondLayerInput = numpy.vstack((-1, firstLayerResult))
             secondLayerWeightsAfterCorrection = learnFactor \
-                                                * X2 \
+                                                * secondLayerInput \
                                                 * secondLayerResultMultipliedByDerivativeOfActivationFunction.T \
                                                 + (momentumFactor * secondLayerWeightsAfterCorrection)
 
-            dW1pokaz += firstLayerWeightsAfterCorrection 
-            dW2pokaz += secondLayerWeightsAfterCorrection
+            showFirstLayerWeightsAfterCorrection += firstLayerWeightsAfterCorrection 
+            showSecondLayerWeightsAfterCorrection += secondLayerWeightsAfterCorrection
 
-        firstLayerNetworkWeightsMatrix += dW1pokaz / numberOfShownExamplesPerStep
-        secondLayerNetworkWeightsMatrix += dW2pokaz / numberOfShownExamplesPerStep
+        firstLayerNetworkWeightsMatrix += showFirstLayerWeightsAfterCorrection / numberOfShownExamplesPerStep
+        secondLayerNetworkWeightsMatrix += showSecondLayerWeightsAfterCorrection / numberOfShownExamplesPerStep
 
-        dW1pokaz = 0
-        dW2pokaz = 0
+        showFirstLayerWeightsAfterCorrection = 0
+        showSecondLayerWeightsAfterCorrection = 0
 
-        blad1 = firstLayerMeanSquaredError / numberOfShownExamplesPerStep
-        blad2 = secondLayerMeanSquaredError / numberOfShownExamplesPerStep
-        secondLayerDataPlot[learnStep] = blad2
-        firstLayerDataPlot[learnStep] = blad1
+        firstLayerAveragedMeanSquaredError = firstLayerMeanSquaredError / numberOfShownExamplesPerStep
+        secondLayerAveragedMeanSquaredError = secondLayerMeanSquaredError / numberOfShownExamplesPerStep
+
+        firstLayerDataPlot[learnStep] = firstLayerAveragedMeanSquaredError
+        secondLayerDataPlot[learnStep] = secondLayerAveragedMeanSquaredError
 
         firstLayerMeanSquaredError = 0
         secondLayerMeanSquaredError = 0
 
         if learnStep >= maxLearnSteps:
             break
-        elif blad2 <= supposedNetworkError:
+        elif secondLayerAveragedMeanSquaredError <= supposedNetworkError:
             try:
                 if any(list(secondLayerDataPlot.values())[learnStep - b] / supposedNetworkError >= 10 for b in range(2, 42)):
                     pass
@@ -97,11 +97,12 @@ def learn(firstLayerNetworkWeightsMatrixBeforeLearn, \
             except IndexError:
                 pass
 
-        if blad2 > 1.04 * blad2poprzedni and 0.7 * learnFactor >= 0.15:
+        if secondLayerAveragedMeanSquaredError > 1.04 * previousSecondLayerAveragedMeanSquaredError and 0.7 * learnFactor >= 0.15:
             learnFactor = 0.7 * learnFactor
         else:
             learnFactor = 1.05 * learnFactor
-        blad2poprzedni = blad2
+
+        previousSecondLayerAveragedMeanSquaredError = secondLayerAveragedMeanSquaredError
 
     return firstLayerNetworkWeightsMatrix, \
            secondLayerNetworkWeightsMatrix, \
