@@ -16,6 +16,12 @@ maxLearnSteps = 3500
 supposedNetworkError = 0.0003
 numberOfShownExamplesPerStep = 10
 
+maximumOfWeightRange = 100
+minimumOfWeightRange = -100
+noDataElementsLimitation = 2
+square = 2
+weightStepDenominator = 100
+
 def calculateData():
     inputsNumber = 2 
     firstLayerNueronsNumber = 2 
@@ -49,22 +55,27 @@ firstLayerDataPlot, \
 secondLayerDataPlot = calculateData()
 
 def testDoubleNeuralNetwork():
+    firstWeightIndex = 0
+    secondWeightIndex = 1
+    thirdWeightIndex = 2
+    fourthWeightIndex = 3
+
     firstLayerOutputsVector, \
     firstElementOfSecondLayerOutputsVector = simulateNeuralNetwork(firstLayerNetworkWeightsMatrixAfterLearn, \
                                                                    secondLayerNetworkWeightsMatrixAfterLearn, \
-                                                                   trainStringInputs[:, [0]])
+                                                                   trainStringInputs[:, [firstWeightIndex]])
     firstLayerOutputsVector, \
     secondElementOfSecondLayerOutputsVector = simulateNeuralNetwork(firstLayerNetworkWeightsMatrixAfterLearn, \
                                                                     secondLayerNetworkWeightsMatrixAfterLearn, \
-                                                                    trainStringInputs[:, [1]])
+                                                                    trainStringInputs[:, [secondWeightIndex]])
     firstLayerOutputsVector, \
     thirdElementOfSecondLayerOutputsVector = simulateNeuralNetwork(firstLayerNetworkWeightsMatrixAfterLearn, \
                                                                    secondLayerNetworkWeightsMatrixAfterLearn, \
-                                                                   trainStringInputs[:, [2]])
+                                                                   trainStringInputs[:, [thirdWeightIndex]])
     firstLayerOutputsVector, \
     fourthElementOfSecondLayerOutputsVector = simulateNeuralNetwork(firstLayerNetworkWeightsMatrixAfterLearn, \
                                                                     secondLayerNetworkWeightsMatrixAfterLearn, \
-                                                                    trainStringInputs[:, [3]])
+                                                                    trainStringInputs[:, [fourthWeightIndex]])
     SecondLayerOutputsVector = [firstElementOfSecondLayerOutputsVector, \
                                 secondElementOfSecondLayerOutputsVector, \
                                 thirdElementOfSecondLayerOutputsVector, \
@@ -91,6 +102,7 @@ def getResult():
 def getMeanSquaredErrorChart():
     figureColumns = 1
     figureRows = 2
+
     figure, meanSquaredErrorChart = matplotlib.pyplot.subplots(figureRows, figureColumns)
 
     meanSquaredErrorChart[0].set_title("Mean Squared Error - First Layer")
@@ -109,58 +121,69 @@ def getMeanSquaredErrorChart():
     
     figure.tight_layout()
 
-def wykresZmiennaWaga2D():
-    blad = []
-    zakres_zmiany_wagi = [x / 10 for x in range(-10, 11)]
-    pierwotna_wartosc_wagi = secondLayerNetworkWeightsMatrixAfterLearn[0]
+def getPurposeFunctionDependingOnWeightsChart():
+    errorValues = []
+    figureColumns = 1
+    figureRows = 1
+    weightIndex = 0
 
-    for aktualna_wartosc_wagi in zakres_zmiany_wagi:
-        secondLayerNetworkWeightsMatrixAfterLearn[0] = aktualna_wartosc_wagi
+    rangeOfWeightChange = [weightStep / weightStepDenominator for weightStep in range(minimumOfWeightRange, \
+                                                                                      maximumOfWeightRange)]
+    previousValueOfWeight = secondLayerNetworkWeightsMatrixAfterLearn[weightIndex]
+
+    for currentWeight in rangeOfWeightChange:
+        secondLayerNetworkWeightsMatrixAfterLearn[weightIndex] = currentWeight
         
         stringOutputsAfterLearn = testDoubleNeuralNetwork()
 
-        odchylenie_od_wart_oczekiwanej = trainStringOutputs - stringOutputsAfterLearn
-        blad.append(numpy.sum(odchylenie_od_wart_oczekiwanej ** 2 / 2))
+        expectedValueDeviation = trainStringOutputs - stringOutputsAfterLearn
+        errorValues.append(numpy.sum(expectedValueDeviation ** square / noDataElementsLimitation))
 
-    secondLayerNetworkWeightsMatrixAfterLearn[0] = pierwotna_wartosc_wagi
+    secondLayerNetworkWeightsMatrixAfterLearn[weightIndex] = previousValueOfWeight
 
-    fig, ax = matplotlib.pyplot.subplots(1, 1)
+    figure, purposeFunctionDependingOnWeights = matplotlib.pyplot.subplots(figureRows, figureColumns)
 
-    ax.plot(zakres_zmiany_wagi, blad)
-    ax.grid()
-    ax.set_title("Jedna zmienna waga")
-    ax.set_ylabel('Wartość błędu')
-    ax.set_xlabel('Wartość wagi')
+    purposeFunctionDependingOnWeights.set_title("One weight change")
+    purposeFunctionDependingOnWeights.set_ylabel('Error Value')
+    purposeFunctionDependingOnWeights.set_xlabel('Weight Value')
+    purposeFunctionDependingOnWeights.grid()
+    purposeFunctionDependingOnWeights.plot(rangeOfWeightChange, errorValues)
 
-def wykresZmiennaWaga3D():
-    blad = []
-    zakres_zmiany_wagi = [x / 10 for x in range(-10, 11)]
-    pierwotna_wartosc_wagi1 = secondLayerNetworkWeightsMatrixAfterLearn[0]
-    pierwotna_wartosc_wagi2 = secondLayerNetworkWeightsMatrixAfterLearn[1]
+def getPurposeFunctionDependingOnWeights3DChart():
+    errorValues = []
+    firstWeightIndex = 0
+    secondWeightIndex = 1
 
-    for i, aktualna_wartosc_wagi1 in enumerate(zakres_zmiany_wagi):
-        blad.append([])
-        for aktualna_wartosc_wagi2 in zakres_zmiany_wagi:
-            secondLayerNetworkWeightsMatrixAfterLearn[0] = aktualna_wartosc_wagi1
-            secondLayerNetworkWeightsMatrixAfterLearn[1] = aktualna_wartosc_wagi2
+    rangeOfWeightChange = [weightStep / weightStepDenominator for weightStep in range(minimumOfWeightRange, \
+                                                                                      maximumOfWeightRange)]
+    previousValueOfFirstWeight = secondLayerNetworkWeightsMatrixAfterLearn[firstWeightIndex]
+    previousValueOfSecondWeight = secondLayerNetworkWeightsMatrixAfterLearn[secondWeightIndex]
+
+    for index, currentValueOfFirstWeight in enumerate(rangeOfWeightChange):
+        errorValues.append([])
+        for currentValueOfSecondWeight in rangeOfWeightChange:
+            secondLayerNetworkWeightsMatrixAfterLearn[firstWeightIndex] = currentValueOfFirstWeight
+            secondLayerNetworkWeightsMatrixAfterLearn[secondWeightIndex] = currentValueOfSecondWeight
     
             stringOutputsAfterLearn = testDoubleNeuralNetwork()
 
-            odchylenie_od_wart_oczekiwanej = trainStringOutputs - stringOutputsAfterLearn
-            blad[i].append(numpy.sum(odchylenie_od_wart_oczekiwanej ** 2 / 2))
+            expectedValueDeviation = trainStringOutputs - stringOutputsAfterLearn
+            errorValues[index].append(numpy.sum(expectedValueDeviation ** square / noDataElementsLimitation))
 
-    secondLayerNetworkWeightsMatrixAfterLearn[0] = pierwotna_wartosc_wagi1
-    secondLayerNetworkWeightsMatrixAfterLearn[1] = pierwotna_wartosc_wagi2
+    secondLayerNetworkWeightsMatrixAfterLearn[firstWeightIndex] = previousValueOfFirstWeight
+    secondLayerNetworkWeightsMatrixAfterLearn[secondWeightIndex] = previousValueOfSecondWeight
 
-    fig = matplotlib.pyplot.figure()
+    figure = matplotlib.pyplot.figure()
 
-    ax = fig.gca(projection='3d')
-    ax.set_title("Dwie zmienne wagi")
-    ax.set_xlabel("Wartość wagi 1")
-    ax.set_ylabel("Wartość wagi 2")
-    ax.set_zlabel("Wartość błędu")
-    X, Y = numpy.meshgrid(zakres_zmiany_wagi, zakres_zmiany_wagi)
-    surf = ax.plot_surface(X, Y, numpy.array(blad), cmap=cm.seismic,
-                    linewidth=0, antialiased=False)
-    fig.colorbar(surf, shrink=0.5, aspect=5)
-    fig.tight_layout()
+    purposeFunctionDependingOnWeights = figure.gca(projection='3d')
+    purposeFunctionDependingOnWeights.set_title("Two weight change")
+    purposeFunctionDependingOnWeights.set_xlabel("First Weight Value")
+    purposeFunctionDependingOnWeights.set_ylabel("Second Weight Value")
+    purposeFunctionDependingOnWeights.set_zlabel("Error Value")
+    axisX, axisY = numpy.meshgrid(rangeOfWeightChange, rangeOfWeightChange)
+    surface = purposeFunctionDependingOnWeights.plot_surface(axisX, axisY, numpy.array(errorValues), \
+                                                             cmap = cm.seismic, \
+                                                             linewidth = 0, \
+                                                             antialiased = False)
+    figure.colorbar(surface, shrink = 0.5, aspect = 5)
+    figure.tight_layout()

@@ -26,6 +26,9 @@ def learn(firstLayerNetworkWeightsMatrixBeforeLearn, \
     sizeOfEachElementInsideArray = 1
     square = 2
 
+    maximumPreviousValueRange = 42
+    minimumPreviousValueRange = 2
+
     firstLayerNetworkWeightsMatrix = firstLayerNetworkWeightsMatrixBeforeLearn
     secondLayerNetworkWeightsMatrix = secondLayerNetworkWeightsMatrixBeforeLearn
 
@@ -90,7 +93,9 @@ def learn(firstLayerNetworkWeightsMatrixBeforeLearn, \
             break
         elif secondLayerAveragedMeanSquaredError <= supposedNetworkError:
             try:
-                if any(list(secondLayerDataPlot.values())[learnStep - b] / supposedNetworkError >= 10 for b in range(2, 42)):
+                if any(list(secondLayerDataPlot.values())[learnStep - previousValueIndex] \
+                            / supposedNetworkError  >= 10 for previousValueIndex in range(minimumPreviousValueRange, \
+                                                                                          maximumPreviousValueRange)):
                     pass
                 else:
                     break

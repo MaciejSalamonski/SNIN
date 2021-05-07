@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 sys.path.append(os.path.abspath("functions"))
 from calculateData import getResult
 from calculateData import getMeanSquaredErrorChart
-from calculateData import wykresZmiennaWaga2D
-from calculateData import wykresZmiennaWaga3D
+from calculateData import getPurposeFunctionDependingOnWeightsChart
+from calculateData import getPurposeFunctionDependingOnWeights3DChart
 
 if __name__ == '__main__':
     
     getResult()
     getMeanSquaredErrorChart()
-    wykresZmiennaWaga2D()
-    wykresZmiennaWaga3D()
+    getPurposeFunctionDependingOnWeightsChart()
+    getPurposeFunctionDependingOnWeights3DChart()
     plt.show()
