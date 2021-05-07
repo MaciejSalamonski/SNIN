@@ -19,25 +19,36 @@ trainStringInputs = numpy.array([[4, 2, -1],
                                 [-1.5, 2, 1.5]])
 trainStringOutputs = numpy.eye(sizeOfAnIdentityMatrix)
 
+# The main function responsible for three things: Creation, Learining, Testing of neural network.
+
 def calculateData():
+    # Creation of a single-layer neural network.
     networkWeightsMatrixBeforeLearn = createNetworkWithRandomWeights(inputsNumber, nueronsNumber)
+    # Learning the single-layer neural network.
     networkWeightsMatrixAfterLearn, dataPlot = learn(networkWeightsMatrixBeforeLearn,\
                                                      trainStringInputs,\
                                                      trainStringOutputs,\
                                                      learnSteps,\
                                                      maxLearnSteps,\
                                                      supposedNetworkError)
+    # Obtaining the result of learning the single-layer neural network.
+    # The result will be used to test the neural network.                                                 
     result = simulateNeuralNetwork(networkWeightsMatrixAfterLearn, trainStringInputs)
 
     return result, dataPlot
 
+# Using a calculateData() function and assigning its result to variables.
 result, dataPlot = calculateData()
+
+# Displaying the result in the form of a table.
 
 def getResult():
     print(tabulate(result,\
                 tablefmt = 'orgtbl',\
                 showindex = ['Mammal', 'Bird', 'Fish'],\
                 headers = ['First Example', 'Second Example', 'Third Example']))
+
+# Displaying the mena square error chart.
 
 def getMeanSquaredErrorChart():
     figureColumns = 1

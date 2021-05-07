@@ -8,5 +8,7 @@ from calculateData import getResult
 
 if __name__ == '__main__':
 
+    # Main - Calling getResult() & getMeanSquaredErrorChart() function
+
     getResult()
     getMeanSquaredErrorChart()
