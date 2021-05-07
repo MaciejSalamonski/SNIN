@@ -1,5 +1,7 @@
 import numpy
 
+# simulateNeuralNetwork(args...) - Simulating the operation of a double-layer neural network.
+
 def simulateNeuralNetwork(firstLayerNetworkWeightsMatrix, secondLayerNetworkWeightsMatrix, inputsVector):
     beta = 5
     constantValue = 1

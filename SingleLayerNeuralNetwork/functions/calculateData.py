@@ -19,7 +19,7 @@ trainStringInputs = numpy.array([[4, 2, -1],
                                 [-1.5, 2, 1.5]])
 trainStringOutputs = numpy.eye(sizeOfAnIdentityMatrix)
 
-# The main function responsible for three things: Creation, Learining, Testing of neural network.
+# calculateData() - The main function responsible for three things: Creation, Learining, Testing of neural network.
 
 def calculateData():
     # Creation of a single-layer neural network.
@@ -40,7 +40,7 @@ def calculateData():
 # Using a calculateData() function and assigning its result to variables.
 result, dataPlot = calculateData()
 
-# Displaying the result in the form of a table.
+# getResult() - Displaying the result in the form of a table for single-layer neural network.
 
 def getResult():
     print(tabulate(result,\
@@ -48,7 +48,7 @@ def getResult():
                 showindex = ['Mammal', 'Bird', 'Fish'],\
                 headers = ['First Example', 'Second Example', 'Third Example']))
 
-# Displaying the mena square error chart.
+# getMeanSquaredErrorChart() - Displaying the mean square error chart of single-layer neural network.
 
 def getMeanSquaredErrorChart():
     figureColumns = 1

@@ -1,7 +1,7 @@
 import numpy
 from simulateNeuralNetwork import simulateNeuralNetwork
 
-# Learning a single-layer network. The single-layer network is trained
+# learn(args...) - Learning a single-layer network. The single-layer network is trained
 # by the number of steps: learnSteps specified. Training of a single-layer
 # network takes place on the given training string: trainStringInputs, trainStringOutputs
 

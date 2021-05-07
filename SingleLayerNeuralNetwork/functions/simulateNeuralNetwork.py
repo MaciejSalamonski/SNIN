@@ -1,6 +1,6 @@
 import numpy
 
-# Simulating the operation of a single-layer neural network.
+# simulateNeuralNetwork(args...) - Simulating the operation of a single-layer neural network.
 
 def simulateNeuralNetwork(networkWeightsMatrix, inputsVector):
     beta = 5

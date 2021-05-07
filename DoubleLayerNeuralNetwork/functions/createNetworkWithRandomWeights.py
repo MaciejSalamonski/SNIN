@@ -1,5 +1,8 @@
 import numpy
 
+# createNetworkWithRandomWeights(args...) - Creating a double-layer neural network.
+# Filling both weight matrices with random values in the range: (-0.1, 0.1).
+
 def createNetworkWithRandomWeights(inputsNumber, firstLayerNueronsNumber, secondLayerNueronsNumber):
     fromMinusZeroPointOneToZeroPointOneRange = 0.1
     fromZeroToZeroPointTwoRange = 0.2

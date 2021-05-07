@@ -22,16 +22,20 @@ noDataElementsLimitation = 2
 square = 2
 weightStepDenominator = 100
 
+# calculateData() - Function responsible for two things: Creation, Learining neural network.
+
 def calculateData():
     inputsNumber = 2 
     firstLayerNueronsNumber = 2 
     secondLayerNueronsNumbe = 1
 
+    # Creation of a double-layer neural network.
     firstLayerNetworkWeightsMatrixBeforeLearn, \
     secondLayerNetworkWeightsMatrixBeforeLearn = createNetworkWithRandomWeights(inputsNumber, \
                                                                                 firstLayerNueronsNumber, \
                                                                                 secondLayerNueronsNumbe)
 
+    # Learning the double-layer neural network.
     firstLayerNetworkWeightsMatrixAfterLearn, \
     secondLayerNetworkWeightsMatrixAfterLearn, \
     firstLayerDataPlot, \
@@ -49,10 +53,15 @@ def calculateData():
            firstLayerDataPlot, \
            secondLayerDataPlot
 
+# Using a calculateData() function and assigning its result to variables.
 firstLayerNetworkWeightsMatrixAfterLearn, \
 secondLayerNetworkWeightsMatrixAfterLearn, \
 firstLayerDataPlot, \
 secondLayerDataPlot = calculateData()
+
+# testDoubleNeuralNetwork() - Function responsible for testing neural network
+# Obtaining the result of learning the double-layer neural network.
+# The result will be used to test the neural network.
 
 def testDoubleNeuralNetwork():
     firstWeightIndex = 0
@@ -87,7 +96,10 @@ def testDoubleNeuralNetwork():
 
     return stringOutputsAfterLearn
 
+# getResult() - Displaying the result in the form of a table for double-layer neural network. 
+
 def getResult():
+    # Using a testDoubleNeuralNetwork() function and assigning its result to stringOutputsAfterLearn variable.
     stringOutputsAfterLearn = testDoubleNeuralNetwork()
     print(tabulate(trainStringOutputs, \
                    tablefmt='orgtbl', \
@@ -98,6 +110,8 @@ def getResult():
                    tablefmt='orgtbl', \
                    showindex = ['Values after learning'], \
                    headers = ['First Value', 'Second Value', 'Third Value', 'Fourth Value']))
+
+# getMeanSquaredErrorChart() - Displaying the mean square error chart of double-layer neural network.
 
 def getMeanSquaredErrorChart():
     figureColumns = 1
@@ -121,24 +135,31 @@ def getMeanSquaredErrorChart():
     
     figure.tight_layout()
 
+# getPurposeFunctionDependingOnWeightsChart() - Displaying purpose function depending on weight changes.
+
 def getPurposeFunctionDependingOnWeightsChart():
     errorValues = []
     figureColumns = 1
     figureRows = 1
     weightIndex = 0
 
+    # The range of the weight value change: (-1, 1) with 0.01 step
+    # If calculating takes too long, You can change: weightStepDenominator value to 10.
     rangeOfWeightChange = [weightStep / weightStepDenominator for weightStep in range(minimumOfWeightRange, \
                                                                                       maximumOfWeightRange)]
     previousValueOfWeight = secondLayerNetworkWeightsMatrixAfterLearn[weightIndex]
 
+    # Double-layer neural network testing for successive weight values
     for currentWeight in rangeOfWeightChange:
         secondLayerNetworkWeightsMatrixAfterLearn[weightIndex] = currentWeight
         
         stringOutputsAfterLearn = testDoubleNeuralNetwork()
 
+        # Calculation of the mean square error for the current weight value
         expectedValueDeviation = trainStringOutputs - stringOutputsAfterLearn
         errorValues.append(numpy.sum(expectedValueDeviation ** square / noDataElementsLimitation))
 
+    # Restore  original value after finished testing.
     secondLayerNetworkWeightsMatrixAfterLearn[weightIndex] = previousValueOfWeight
 
     figure, purposeFunctionDependingOnWeights = matplotlib.pyplot.subplots(figureRows, figureColumns)
@@ -148,16 +169,21 @@ def getPurposeFunctionDependingOnWeightsChart():
     purposeFunctionDependingOnWeights.grid()
     purposeFunctionDependingOnWeights.plot(rangeOfWeightChange, errorValues)
 
+# getPurposeFunctionDependingOnWeightsChart() - Displaying purpose function depending on the changes of both weights (3D).
+
 def getPurposeFunctionDependingOnWeights3DChart():
     errorValues = []
     firstWeightIndex = 0
     secondWeightIndex = 1
 
+    # The range of the weight value change: (-1, 1) with 0.01 step
+    # If calculating takes too long, You can change: weightStepDenominator value to 10.
     rangeOfWeightChange = [weightStep / weightStepDenominator for weightStep in range(minimumOfWeightRange, \
                                                                                       maximumOfWeightRange)]
     previousValueOfFirstWeight = secondLayerNetworkWeightsMatrixAfterLearn[firstWeightIndex]
     previousValueOfSecondWeight = secondLayerNetworkWeightsMatrixAfterLearn[secondWeightIndex]
 
+    # Double-layer neural network testing for successive weights values
     for index, currentValueOfFirstWeight in enumerate(rangeOfWeightChange):
         errorValues.append([])
         for currentValueOfSecondWeight in rangeOfWeightChange:
@@ -166,9 +192,11 @@ def getPurposeFunctionDependingOnWeights3DChart():
     
             stringOutputsAfterLearn = testDoubleNeuralNetwork()
 
+            # Calculation of the mean square error for the current weight value
             expectedValueDeviation = trainStringOutputs - stringOutputsAfterLearn
             errorValues[index].append(numpy.sum(expectedValueDeviation ** square / noDataElementsLimitation))
 
+    # Restore  original value after finished testing.
     secondLayerNetworkWeightsMatrixAfterLearn[firstWeightIndex] = previousValueOfFirstWeight
     secondLayerNetworkWeightsMatrixAfterLearn[secondWeightIndex] = previousValueOfSecondWeight
 
