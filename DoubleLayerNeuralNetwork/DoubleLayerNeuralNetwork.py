@@ -13,4 +13,5 @@ if __name__ == '__main__':
     getMeanSquaredErrorChart()
     getPurposeFunctionDependingOnWeightsChart()
     getPurposeFunctionDependingOnWeights3DChart()
+    
     plt.show()

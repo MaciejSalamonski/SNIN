@@ -142,7 +142,6 @@ def getPurposeFunctionDependingOnWeightsChart():
     secondLayerNetworkWeightsMatrixAfterLearn[weightIndex] = previousValueOfWeight
 
     figure, purposeFunctionDependingOnWeights = matplotlib.pyplot.subplots(figureRows, figureColumns)
-
     purposeFunctionDependingOnWeights.set_title("One weight change")
     purposeFunctionDependingOnWeights.set_ylabel('Error Value')
     purposeFunctionDependingOnWeights.set_xlabel('Weight Value')
@@ -174,16 +173,15 @@ def getPurposeFunctionDependingOnWeights3DChart():
     secondLayerNetworkWeightsMatrixAfterLearn[secondWeightIndex] = previousValueOfSecondWeight
 
     figure = matplotlib.pyplot.figure()
-
-    purposeFunctionDependingOnWeights = figure.gca(projection='3d')
+    purposeFunctionDependingOnWeights = figure.add_subplot(projection='3d')
     purposeFunctionDependingOnWeights.set_title("Two weight change")
     purposeFunctionDependingOnWeights.set_xlabel("First Weight Value")
     purposeFunctionDependingOnWeights.set_ylabel("Second Weight Value")
     purposeFunctionDependingOnWeights.set_zlabel("Error Value")
     axisX, axisY = numpy.meshgrid(rangeOfWeightChange, rangeOfWeightChange)
-    surface = purposeFunctionDependingOnWeights.plot_surface(axisX, axisY, numpy.array(errorValues), \
-                                                             cmap = cm.seismic, \
-                                                             linewidth = 0, \
-                                                             antialiased = False)
-    figure.colorbar(surface, shrink = 0.5, aspect = 5)
+    surface = purposeFunctionDependingOnWeights.plot_surface(axisX, \
+                                                             axisY, \
+                                                             numpy.array(errorValues), \
+                                                             cmap = cm.RdBu)
+    figure.colorbar(surface, shrink = 1, aspect = 10)
     figure.tight_layout()
