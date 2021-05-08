@@ -7,12 +7,12 @@
 ### tabulate - displaying tables
 
 ## Command to install: pip install moduleName
-## Example: pip install numpy
+### Example: pip install numpy
 
 ## If there is not pip on your computer (linux)
-Command to install: apt install python3-pip
+### Command to install: apt install python3-pip
 
-more info
+## More info
 
 ### Linux - https://www.tecmint.com/install-pip-in-linux/
 ### Windows - https://www.liquidweb.com/kb/install-pip-windows/
