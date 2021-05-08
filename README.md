@@ -2,12 +2,12 @@
 
 ## Modules that need to be installed:
 
-numpy - operations on matrices, mathematical functions
-matplotlib - plotting charts
-tabulate - displaying tables
+### numpy - operations on matrices, mathematical functions
+### matplotlib - plotting charts
+### tabulate - displaying tables
 
-Command to install: pip install moduleName
-Example: pip install numpy
+## Command to install: pip install moduleName
+## Example: pip install numpy
 
 ## If there is not pip on your computer (linux)
 Command to install: apt install python3-pip
