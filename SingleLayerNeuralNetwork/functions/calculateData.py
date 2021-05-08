@@ -7,8 +7,8 @@ from simulateNeuralNetwork import simulateNeuralNetwork
 from tabulate import tabulate
 
 inputsNumber = 5
-learnSteps = 70
-maxLearnSteps = 40
+learnSteps = 100
+maxLearnSteps = 50
 nueronsNumber = 3
 sizeOfAnIdentityMatrix = 3
 supposedNetworkError = 0.0002

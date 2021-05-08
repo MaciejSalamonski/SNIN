@@ -12,7 +12,7 @@ trainStringInputs = numpy.array([[0, 0, 1, 1],
                                 [0, 1, 0, 1]])
 trainStringOutputs = numpy.array([[0, 1, 1, 0]])
 learnSteps = 5000
-maxLearnSteps = 3500
+maxLearnSteps = 2500
 supposedNetworkError = 0.0003
 numberOfShownExamplesPerStep = 10
 
