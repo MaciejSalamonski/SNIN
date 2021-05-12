@@ -6,7 +6,7 @@
 ### matplotlib - plotting charts
 ### tabulate - displaying tables
 
-## Command to install: pip install moduleName
+## Command to install: pip3 install moduleName
 ### Example: pip3 install numpy
 
 ## If there is not pip on your computer (linux)
