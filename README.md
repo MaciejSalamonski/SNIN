@@ -1,4 +1,4 @@
-# SNIN
+# SNIN - Python3
 
 ## Modules that need to be installed:
 
@@ -7,10 +7,10 @@
 ### tabulate - displaying tables
 
 ## Command to install: pip install moduleName
-### Example: pip install numpy
+### Example: pip3 install numpy
 
 ## If there is not pip on your computer (linux)
-### Command to install: apt install python3-pip
+### Command to install: sudo apt-get install python3-pip
 
 ## More info
 
