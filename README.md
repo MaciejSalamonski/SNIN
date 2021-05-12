@@ -14,6 +14,7 @@
 
 ## More info
 
+### Installing modules - https://help.dreamhost.com/hc/en-us/articles/115000699011-Using-pip3-to-install-Python3-modules
 ### Linux - https://www.tecmint.com/install-pip-in-linux/
 ### Windows - https://www.liquidweb.com/kb/install-pip-windows/
 ### macOS - https://www.geeksforgeeks.org/how-to-install-pip-in-macos/
